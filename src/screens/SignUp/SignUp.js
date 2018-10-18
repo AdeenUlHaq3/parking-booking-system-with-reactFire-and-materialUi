@@ -1,22 +1,29 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import firebase from '../../config/firebase';
+import swal from 'sweetalert';
 
 const styles = theme => ({
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        flexBasis: 200,
+        width: '100%',
     },
     margin: {
         margin: theme.spacing.unit,
     },
-    root: {
-        flexGrow: 1,
+    form: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: '40%'
+    },
+    button: {
+        borderRadius: 0,
+        fontWeight: 'bold',
+        marginTop: 10,
+        float: 'right'
     }
 });
 
@@ -53,7 +60,32 @@ class SignUp extends React.Component {
     }
 
     handleSubmit = () => {
-        // your submit logic
+        const {
+            firstName,
+            lastName,
+            email,
+            password
+        } = this.state.user;
+
+        firebase.database().ref(`parkingUsers`)
+        .set({
+            firstName,
+            lastName,
+            email,
+            password
+        }) 
+        .then(() => {
+            swal('Wooh........!', 'You are successfully signed up');
+            this.setState({
+                user: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+                repeatPassword: '',
+            }
+            })
+        })   
     }
 
     render() {
@@ -68,6 +100,7 @@ class SignUp extends React.Component {
         return (
             <Grid container>
                 <ValidatorForm
+                    className={classes.form}
                     ref="form"
                     onSubmit={this.handleSubmit}
                     onError={errors => console.log(errors)}
@@ -79,8 +112,8 @@ class SignUp extends React.Component {
                             className={classes.textField}
                             onChange={this.handleChange}
                             value={user.firstName}
-                            validators={['matchRegexp:[a-z,A-Z]{1}']}
-                            errorMessages={['Type Mismatch']}
+                            validators={['required','matchRegexp:[a-z,A-Z]{1}']}
+                            errorMessages={['this field is required','Type Mismatch']}
                             margin='normal'
                         />
                     </Grid>
@@ -91,8 +124,8 @@ class SignUp extends React.Component {
                             className={classes.textField}
                             onChange={this.handleChange}
                             value={user.lastName}
-                            validators={['matchRegexp:[a-z,A-Z]{1}']}
-                            errorMessages={['Type Mismatch']}
+                            validators={['required','matchRegexp:[a-z,A-Z]{1}']}
+                            errorMessages={['this field is required','Type Mismatch']}
                             margin='normal'
                         />
                     </Grid>
@@ -133,9 +166,14 @@ class SignUp extends React.Component {
                             margin='normal'
                         /></Grid>
                     <Grid item lg={12}>
-                        <Button variant="extendedFab" color="primary" className={classes.overrides}>
-                            SignUp
-                            <DeleteIcon color='secondary' className={classes.rightIcon} />
+                        <Button
+                            type='submit'
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
+                            value='SignUp'
+                        >
+                        SignUp
                         </Button>
                     </Grid>
                 </ValidatorForm>

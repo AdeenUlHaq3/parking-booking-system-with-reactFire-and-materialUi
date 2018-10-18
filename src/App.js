@@ -2,27 +2,30 @@ import React, { Component } from 'react';
 import './App.css';
 import AppBar from './components/PrimaryAppBar/PrimaryAppBar';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { red, white, blue, amber } from '@material-ui/core/colors';
-import firebase from './config/firebase';
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 
-import routes from './routes';
+import Routes from './routes';
+
+const styles = {
+    root: {
+        width: '100%',
+        height: '100vh',
+        background: '#e9ebee'
+    },
+    
+}
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: amber[500],
+            main: '#FF8F00',
+            contrastText: '#e9ebee'
         },
-        secondary: blue,
-        type: 'light',
-        raisedPrimary: {
-            color: amber[500],
-            backgroundColor: red,
-            '&:hover': {
-                backgroundColor: white,
-            },
-        }
+        secondary: {
+            main: 'rgb(10,170,120)',
+            contrastText: '#e9ebee'
+          },
     }
 })
 
@@ -41,15 +44,21 @@ class App extends Component {
     };
 
     render() {
-        console.log(this.props.history)
+        const {
+            classes
+        } = this.props;
+        console.log(this.props.classes);
+        
         return (
+            <div className={classes.root}>
             <MuiThemeProvider theme={theme}>
                 <AppBar />
-                { routes }
+                <Routes />  
             </MuiThemeProvider>
+            </div>
         );
     }
 
 }
 
-export default withRouter(App);
+export default withStyles(styles)(withRouter(App));

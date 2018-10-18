@@ -173,7 +173,7 @@ class PrimaryAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="subheading" color="inherit" noWrap>
-              Material-UI
+              Parking Booking System
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
