@@ -59,7 +59,7 @@ class SignUp extends React.Component {
         this.setState({ user });
     }
 
-    handleSubmit = () => {
+    handleSignUp = () => {
         const {
             firstName,
             lastName,
@@ -67,25 +67,28 @@ class SignUp extends React.Component {
             password
         } = this.state.user;
 
-        firebase.database().ref(`parkingUsers`)
-        .set({
-            firstName,
-            lastName,
-            email,
-            password
-        }) 
-        .then(() => {
-            swal('Wooh........!', 'You are successfully signed up');
-            this.setState({
-                user: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                password: '',
-                repeatPassword: '',
-            }
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(snapshot => {
+                firebase.database().ref(`parkingUsers/${snapshot.user.uid}`)
+                    .set({
+                        firstName,
+                        lastName,
+                        email,
+                        password
+                    })
+                    .then(() => {
+                        swal('Wooh........!', 'You are successfully signed up');
+                        this.setState({
+                            user: {
+                                firstName: '',
+                                lastName: '',
+                                email: '',
+                                password: '',
+                                repeatPassword: '',
+                            }
+                        })
+                    })
             })
-        })   
     }
 
     render() {
@@ -102,7 +105,7 @@ class SignUp extends React.Component {
                 <ValidatorForm
                     className={classes.form}
                     ref="form"
-                    onSubmit={this.handleSubmit}
+                    onSubmit={this.handleSignUp}
                     onError={errors => console.log(errors)}
                 >
                     <Grid item lg={12}>
@@ -112,8 +115,8 @@ class SignUp extends React.Component {
                             className={classes.textField}
                             onChange={this.handleChange}
                             value={user.firstName}
-                            validators={['required','matchRegexp:[a-z,A-Z]{1}']}
-                            errorMessages={['this field is required','Type Mismatch']}
+                            validators={['required', 'matchRegexp:[a-z,A-Z]{1}']}
+                            errorMessages={['this field is required', 'Type Mismatch']}
                             margin='normal'
                         />
                     </Grid>
@@ -124,8 +127,8 @@ class SignUp extends React.Component {
                             className={classes.textField}
                             onChange={this.handleChange}
                             value={user.lastName}
-                            validators={['required','matchRegexp:[a-z,A-Z]{1}']}
-                            errorMessages={['this field is required','Type Mismatch']}
+                            validators={['required', 'matchRegexp:[a-z,A-Z]{1}']}
+                            errorMessages={['this field is required', 'Type Mismatch']}
                             margin='normal'
                         />
                     </Grid>
@@ -173,7 +176,7 @@ class SignUp extends React.Component {
                             className={classes.button}
                             value='SignUp'
                         >
-                        SignUp
+                            SignUp
                         </Button>
                     </Grid>
                 </ValidatorForm>

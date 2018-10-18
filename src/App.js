@@ -23,7 +23,7 @@ const theme = createMuiTheme({
             contrastText: '#e9ebee'
         },
         secondary: {
-            main: 'rgb(10,170,120)',
+            main: 'rgb(10,140,20)',
             contrastText: '#e9ebee'
           },
     }
@@ -47,7 +47,6 @@ class App extends Component {
         const {
             classes
         } = this.props;
-        console.log(this.props.classes);
         
         return (
             <div className={classes.root}>
